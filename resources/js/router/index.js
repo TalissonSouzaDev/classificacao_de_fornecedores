@@ -1,11 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import TarefasList from '../views/TarefasList.vue'
 import FornecedorHome from '../views/Fornecedor/Home.vue'
+import DemandaHome from '../views/Demanda/Home.vue'
+import ServicoHome from '../views/Servico/Home.vue'
 
 const routes = [
-  { path: '/', redirect: '/tarefas' },
-  { path: '/tarefas', component: TarefasList },
+  { path: '/', redirect: '/demanda' },
   { path: '/fornecedor', component: FornecedorHome },
+  { path: '/demanda', component: DemandaHome },
+  { path: '/servico', component: ServicoHome },
 ]
 
 const router = createRouter({

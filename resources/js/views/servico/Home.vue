@@ -1,6 +1,6 @@
 <template>
     <div class="m-50 mb-15">
-      <h1>Fornecedor</h1>
+      <h1>Serviço</h1>
       <TableList/>
     </div>
 </template>
