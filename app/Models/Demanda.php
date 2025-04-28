@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Demanda extends Model
 {
     protected $table = "demandas";
-    protected $fillable = ["name","cep_demanda"];
+    protected $fillable = ["name","cep_demanda","servico_id"];
 
     public function classificacao_fornecedor() {
         return $this->hasMany(classificacao_fornecedor::class);
@@ -17,5 +17,5 @@ class Demanda extends Model
         return $this->belongsTo(Servico::class);
     }
 
-    
+
 }

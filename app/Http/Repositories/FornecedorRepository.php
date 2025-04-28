@@ -24,14 +24,15 @@ class FornecedorRepository {
                                 ->where("telefone","LIKE","%{$filter}%")
                                 ->where("cep_sede","LIKE","%{$filter}%")
                                 ->paginate(10);
-        return $response;                       
+        return $response;
     }
 
     public function GetByIdFornecedor(string | int $idfornecedor) {
         if(!empty($idfornecedor)) {
-            $getfornecedor = $this->fornecedor->with("Servico")->where("id",$idfornecedor)->first();
+            $getfornecedor = $this->fornecedor->where("id",$idfornecedor)->first();
             return $getfornecedor;
         }
+        return [];
     }
 
     public function Create_Fornecedor(array $request) {
@@ -70,22 +71,30 @@ class FornecedorRepository {
         return $fornecedordelete ? true : false;
     }
 
+    public function FornecedorServicosGet(string | int $id) {
+        $fornecedor = $this->GetByIdFornecedor($id);
+        if(empty($fornecedor)) {
+            abort(404, 'Fornecedor não encontrado.');
+        }
+        return $fornecedor->servicos->all();
+    }
+
 
     public function AttachFornecedorAndServico(string | int $id, array $request) {
         $fornecedor = $this->GetByIdFornecedor($id);
         if(empty($fornecedor)) {
-
+            abort(404, 'Fornecedor não encontrado.');
         }
-        $fornecedor->attach($request["servicos"]);
+        $fornecedor->servicos()->attach($request["servicos_id"]);
         return true;
     }
 
     public function DetachFornecedorAndServico(string | int $id, string | int $service_id) {
         $fornecedor = $this->GetByIdFornecedor($id);
         if(empty($fornecedor)) {
-
+            abort(404, 'Fornecedor não encontrado.');
         }
-        $fornecedor->detach($service_id);
+        $fornecedor->servicos()->detach($service_id);
         return true;
     }
 }

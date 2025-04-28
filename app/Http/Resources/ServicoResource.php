@@ -14,6 +14,10 @@ class ServicoResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            "id"            => $this->resource["id"] ?? "id não Identificado",
+            "name"          => $this->resource["name"] ?? "Serviço não Identificado",
+            "description"   => $this->resource["description"] ?? "Sem descrição",
+        ];
     }
 }

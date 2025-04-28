@@ -11,7 +11,7 @@ class FornecedorRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,18 @@ class FornecedorRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
+        $data = [
+            'razao_social' => 'required|string|max:255',
+            'cnpj'         => 'required|string|size:14|unique:fornecedors,cnpj',
+            'email'        => 'required|email|unique:fornecedors,email',
+            'telefone'     => 'required|string|max:20',
+            'cep_sede'     => 'required|string|size:8',
         ];
+
+        if ($this->method() == "PUT") {
+            $data['cnpj'] = '';
+            $data['email'] = '';
+        }
+        return $data;
     }
 }

@@ -9,7 +9,7 @@ class Fornecedor extends Model
     protected $table = "fornecedors";
     protected $fillable = ["razao_social","cnpj","email","telefone","cep_sede"];
 
-    public function Servico() {
+    public function servicos() {
         return $this->belongsToMany(Servico::class);
     }
 

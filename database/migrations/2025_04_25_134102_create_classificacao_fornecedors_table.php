@@ -17,7 +17,8 @@ return new class extends Migration
             $table->foreignId('demanda_id')->constrained("demadas")->onDelete('cascade');
             $table->integer("posicao");
             $table->string("justificativa");
-            $table->float("distancia_km");
+            $table->string("distancia_km");
+            $table->float("distancia_value");
             $table->timestamps();
         });
     }

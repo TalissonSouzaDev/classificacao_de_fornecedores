@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
-    protected $ServicoRepository;
+    protected $ServicoRepository,$ClassificacaofornecedorRepository;
 
     public function __construct(ServicoRepository $ServicoRepository)
     {
@@ -19,7 +19,10 @@ class ServiceController extends Controller
 
     public function index(Request $request) {
         try {
-            $servico = $this->ServicoRepository->listAndfilter($request->filter);
+
+            $servico = isset($request->filter)
+                        ? $this->ServicoRepository->listAndfilter($request->filter)
+                        : $this->ServicoRepository->listAndfilter();
             return ServicoResource::collection($servico);
 
          } catch (\Exception $e) {

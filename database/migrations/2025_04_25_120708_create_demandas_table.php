@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('demandas', function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->integer("cep_demanda",8);
-            $table->foreignId('servicos_id')->constrained("servicos")->onDelete('cascade');
+            $table->integer("cep_demanda");
+            $table->foreignId('servico_id')->constrained("servicos")->onDelete('cascade');
             $table->timestamps();
         });
     }

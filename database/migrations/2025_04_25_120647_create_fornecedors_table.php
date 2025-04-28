@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string("cnpj")->unique();
             $table->string("email")->unique();
             $table->string("telefone");
-            $table->integer("cep_sede",8);
+            $table->integer("cep_sede");
             $table->timestamps();
         });
     }

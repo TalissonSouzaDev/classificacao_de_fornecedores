@@ -16,11 +16,14 @@ class FornecedorController extends Controller
     public function __construct(Fornecedor $fornecedor, FornecedorRepository $FornecedorRepository)
     {
         $this->fornecedor = $fornecedor;
+        $this->FornecedorRepository = $FornecedorRepository;
     }
 
     public function index(Request $request) {
         try {
-            $fornecedor = $this->FornecedorRepository->listAndfilter($request->filter);
+            $fornecedor = isset($request->filter)
+                            ? $this->FornecedorRepository->listAndfilter($request->filter)
+                            : $this->FornecedorRepository->listAndfilter();
             return FornecedorResource::collection($fornecedor);
 
          } catch (\Exception $e) {
@@ -74,7 +77,19 @@ class FornecedorController extends Controller
             return response()->json(["success"=>"Fornecedor Deletado com sucesso"],201);
          } catch (\Exception $e) {
              return response()->json([
-                 'error' => 'Erro ao exibir a lista',
+                 'error' => 'Erro ao deleta fornecedor',
+                 'message' => $e->getMessage()
+             ], 500);
+         }
+    }
+
+    public function fornecedorservicosall(string | int $id) {
+        try {
+            $servicos = $this->FornecedorRepository->FornecedorServicosGet($id);
+            return response()->json(["data"=>$servicos],200);
+         } catch (\Exception $e) {
+             return response()->json([
+                 'error' => 'Erro ao Vincular',
                  'message' => $e->getMessage()
              ], 500);
          }

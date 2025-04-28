@@ -1,6 +1,6 @@
 <template>
     <nav class="header">
-        <ul class="header-menu list-none display-flex-row">
+        <ul class="header-menu list-none d-flex-row">
             <li><router-link to="/logo">Logo</router-link></li>
             <li><router-link to="/demanda">Demanda</router-link></li>
             <li><router-link to="/fornecedor">Fornecedor</router-link></li>
