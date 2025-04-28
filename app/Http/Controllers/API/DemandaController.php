@@ -8,7 +8,6 @@ use App\Http\Repositories\DemandaRepository;
 use App\Http\Requests\DemandaRequest;
 use App\Http\Resources\ClassificacaoFornecedorResource;
 use App\Http\Resources\DemandaResource;
-use Illuminate\Http\Request;
 
 class DemandaController extends Controller
 {
@@ -20,7 +19,7 @@ class DemandaController extends Controller
         $this->ClassificacaofornecedorRepository = $ClassificacaofornecedorRepository;
     }
 
-    public function index(Request $request) {
+    public function index() {
         try {
             $Demanda = $this->DemandaRepository->listAndfilter();
             return DemandaResource::collection($Demanda);
@@ -35,12 +34,12 @@ class DemandaController extends Controller
 
     public function show(string | int $id) {
         try {
-            $Demanda = $this->DemandaRepository->GetByIdDemanda($id);
+            $Demanda = $this->DemandaRepository->GetByIddemanda($id);
             return new DemandaResource($Demanda);
 
          } catch (\Exception $e) {
              return response()->json([
-                 'error' => 'Erro ao exibir a Demanda',
+                 'error' => 'Erro ao exibir demanda',
                  'message' => $e->getMessage()
              ], 500);
          }
@@ -60,7 +59,7 @@ class DemandaController extends Controller
 
     public function classificacaofornecedor(string | int $idDemanda) {
         if(empty($idDemanda)) {
-
+            abort("O Id da demanda é necessario");
         }
         $classificacao = $this->ClassificacaofornecedorRepository->GetClassificacaoFornecedor($idDemanda);
         return ClassificacaoFornecedorResource::collection($classificacao);

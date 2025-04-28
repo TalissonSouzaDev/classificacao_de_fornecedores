@@ -12,25 +12,15 @@ class FornecedorRepository {
         $this->fornecedor = $fornecedor;
     }
 
-    public function listAndfilter(string $filter = "") {
-        if(empty($filter)) {
-            $response = $this->fornecedor->latest()->paginate(10);
+    public function listAndfilter() {
+            $response = $this->fornecedor->latest()->get();
             return $response;
-        }
-        $response = $this->fornecedor->with("service")
-                                ->where("razao_social","LIKE","%{$filter}%")
-                                ->where("cnpj","LIKE","%{$filter}%")
-                                ->where("email","LIKE","%{$filter}%")
-                                ->where("telefone","LIKE","%{$filter}%")
-                                ->where("cep_sede","LIKE","%{$filter}%")
-                                ->paginate(10);
-        return $response;
     }
 
     public function GetByIdFornecedor(string | int $idfornecedor) {
         if(!empty($idfornecedor)) {
             $getfornecedor = $this->fornecedor->where("id",$idfornecedor)->first();
-            return $getfornecedor;
+            return $getfornecedor ?? [];
         }
         return [];
     }

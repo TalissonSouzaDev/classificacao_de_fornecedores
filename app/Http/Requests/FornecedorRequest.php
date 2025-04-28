@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class FornecedorRequest extends FormRequest
 {
@@ -29,10 +30,11 @@ class FornecedorRequest extends FormRequest
             'cep_sede'     => 'required|string|size:8',
         ];
 
-        if ($this->method() == "PUT") {
-            $data['cnpj'] = '';
-            $data['email'] = '';
+        if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
+            $data["cnpj"] = "required|string|size:14";
+            $data["email"] = "nullable|email";
         }
+
         return $data;
     }
 }

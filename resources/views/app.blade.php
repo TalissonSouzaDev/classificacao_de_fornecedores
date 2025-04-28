@@ -3,7 +3,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Laravel + Vue SPA</title>
+    <title>Classificação Fornecedor</title>
     @vite('resources/js/app.js')
 </head>
 <body>

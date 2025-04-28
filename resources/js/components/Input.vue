@@ -4,6 +4,7 @@
         <input
             :type="type"
             :placeholder="placeholder"
+            :maxlength="maxlength"
             :value="modelValue"
              @input="$emit('update:modelValue', $event.target.value)"
             >
@@ -17,7 +18,8 @@
     label: String,
     type: String,
     placeholder: String,
-    modelValue: String
+    modelValue: String,
+    maxlength: String
   }
  }
 </script>

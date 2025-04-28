@@ -33,7 +33,8 @@
 
   <Modal v-if="exibir">
     <div v-if="button_acao == 'create' || button_acao == 'update'">
-        <h2>Criar um Novo Fornecedor</h2>
+        <h2 class="mb-15" v-if="button_acao == 'create'">Criar um Novo Fornecedor</h2>
+        <h2 class="mb-15" v-if="button_acao == 'update'">Atualizar o Fornecedor {{ this.razao_social }}</h2>
         <Input
             label="Razão Social"
             type="text"
@@ -86,19 +87,22 @@
 
     <div v-if="button_acao == 'fornecedorservico'">
         <h2>Vincular o Fornecedor: {{ razao_social }}</h2>
-        <div class="overflow-list">
+        <div class="overflow-list mt-5">
             <div v-for="servico in dataservico">
                 <input type="checkbox" v-model="checkbox" :value="servico.id"> {{ servico.name }}
             </div>
         </div>
         <div>
-        <h2>Serviços Vinculados</h2>
-        <ol v-for="fornecedorservicos in fornecedorservico">
-            <li>
-                {{ fornecedorservicos.name }}
-                <button class="button danger" @click="HandleDetach(fornecedorservicos.id)">Desvincular</button>
-            </li>
-        </ol>
+        <h2 class="fornecedor-vinculos">Serviços Vinculados</h2>
+        <div class="overflow-list">
+            <ol class="ol-fornecedor" v-for="fornecedorservicos in fornecedorservico">
+                <li>
+                    {{ fornecedorservicos.name }}
+                    <a href="#" @click="HandleDetach(fornecedorservicos.id)">Desvincular</a>
+                </li>
+            </ol>
+        </div>
+        
     </div>
     </div>
     <div class="d-flex-row space-around mt-5">

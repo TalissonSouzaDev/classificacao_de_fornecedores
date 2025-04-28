@@ -25,12 +25,13 @@
                 </tr>
             </tbody>
       </TableList>
-      <h1 class="text-center" v-else>Carregando ...</h1>
+      <h1 class="text-center" v-else>{{ mensagem }}</h1>
       </div>
 
   <Modal v-if="exibir">
     <div v-if="button_acao == 'create' || button_acao == 'update'">
-        <h2>Criar um Novo Serviço</h2>
+        <h2 v-if="button_acao == 'create'">Criar um Novo Serviço</h2>
+        <h2 v-if="button_acao == 'update'">Atualizar o serviço {{ this.name }}</h2>
         <Input
             label="Nome do Serviço"
             type="text"
@@ -83,6 +84,7 @@
                   exibir:false,
                   load:false,
                   button_acao:'',
+                  mensagem:"Carregando ...",
                   data:[{}],
                   id:0,
                   name:"",
@@ -102,7 +104,7 @@
             },
             validacampos() {
                 if (this.name == "") {
-                    toast.success('campo name não pode ser nulo');
+                    toast.danger('campo name não pode ser nulo');
                     return
                 }
             },
@@ -126,6 +128,9 @@
             async loadServico() {
                 const response = await HttpGet("servico/index");
                 this.data = response.data.data
+                if (this.data.length <= 0) {
+                    this.mensagem = " Não Ha dados"
+                }
                 this.load = true
             },
            async HandleCreate() {

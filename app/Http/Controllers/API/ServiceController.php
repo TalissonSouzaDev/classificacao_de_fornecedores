@@ -33,19 +33,6 @@ class ServiceController extends Controller
          }
     }
 
-    public function show(string | int $id) {
-        try {
-            $servico = $this->ServicoRepository->GetByIdServico($id);
-            return new ServicoResource($servico);
-
-         } catch (\Exception $e) {
-             return response()->json([
-                 'error' => 'Erro ao exibir a servico',
-                 'message' => $e->getMessage()
-             ], 500);
-         }
-    }
-
     public function store(ServicoRequest $request) {
         try {
             $this->ServicoRepository->CreateServico($request->all());

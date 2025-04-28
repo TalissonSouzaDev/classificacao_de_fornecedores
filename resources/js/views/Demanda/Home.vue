@@ -22,7 +22,7 @@
                     <td>{{datas.data_criacao}}</td>
                     <td>{{datas.servico.name}}</td>
                     <td class="d-flex-row space-around">
-                        <button class="button primary" @click="AbrirModalShow(datas)"><font-awesome-icon icon="building" /></button>
+                        <router-link :to="`/classificacao/${datas.id}`"> <button class="button primary"><font-awesome-icon icon="building" /></button></router-link>
                         <button class="button primary" @click="AbrirModalShow(datas)"><font-awesome-icon icon="eye" /></button>
                     </td>
                 </tr>
@@ -33,25 +33,29 @@
 
   <Modal v-if="exibir">
     <div v-if="button_acao == 'create' || button_acao == 'update'">
-        <h2>Criar um Novo Demanda</h2>
+        <h2>Criar uma nova Demanda</h2>
         <Input
-            label="Nome da Demanda"
+            label="Demanda:"
             type="text"
             placeholder="Digite o nome da Demanda"
             v-model="name"
         />
         <Input
-            label="Digite o cep"
+            label="CEP:"
             type="number"
-            placeholder="Digite o cep"
+            placeholder="Digite o cep apenas 8 digitos"
+            maxlength="8"
             v-model="cep_demanda"
         />
-        <select v-model="servico_id">
-            <option value="">Escolha um serviço</option>
-            <option v-for="servicosopcao in servicos" :value="servicosopcao.id">
-                {{ servicosopcao.name }} {{ servicosopcao.id }}
-            </option>
-        </select>
+        <div class="d-flex-column">
+            <label for="">Serviços</label>
+            <select v-model="servico_id" class="select">
+                <option value="">Escolha um serviço</option>
+                <option v-for="servicosopcao in servicos" :value="servicosopcao.id">
+                    {{ servicosopcao.name }}
+                </option>
+            </select>
+        </div>
     </div>
 
     <div v-if="button_acao == 'visualizar'">
@@ -142,7 +146,11 @@
             },
             validacampos() {
                 if (this.name == "") {
-                    toast.success('campo name não pode ser nulo');
+                    toast.danger('campo nome da demanda não pode ser nulo');
+                    return
+                }
+                if (this.cep_demanda == "") {
+                    toast.danger('campo cep não pode ser nulo');
                     return
                 }
             },

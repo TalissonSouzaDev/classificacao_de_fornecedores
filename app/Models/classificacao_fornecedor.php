@@ -11,11 +11,11 @@ class classificacao_fornecedor extends Model
     protected $fillable = ["fornecedor_id","demanda_id","posicao","justificativa","distancia_km","distancia_value"];
 
     public function fornecedor() {
-        return $this->belongsToMany(Fornecedor::class);
+        return $this->belongsTo(Fornecedor::class);
     }
 
     public function demanda() {
-        return $this->belongsToMany(Demanda::class);
+        return $this->belongsTo(Demanda::class);
     }
 
 }

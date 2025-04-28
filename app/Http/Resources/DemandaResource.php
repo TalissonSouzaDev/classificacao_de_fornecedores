@@ -18,11 +18,11 @@ class DemandaResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'            => $this->resource['id'],
-            'name'          => $this->resource['name'],
-            'cep_demanda'   => $this->resource['cep_demanda'],
-            'data_criacao'  => Carbon::parse($this->resource['created_at'])->format('d/m/Y H:i'),
-            'servico'       => Servico::where("id",$this->resource['servico_id'])->first()->only(["id","name","description"]),
+            'id'            => $this->resource['id'] ?? "",
+            'name'          => $this->resource['name'] ?? "",
+            'cep_demanda'   => $this->resource['cep_demanda'] ?? "",
+            'data_criacao'  => Carbon::parse($this->resource['created_at'])->format('d/m/Y H:i') ?? "",
+            'servico'       => Servico::where("id",$this->resource['servico_id'])->first()->only(["id","name","description"]) ?? "",
         ];
     }
 }

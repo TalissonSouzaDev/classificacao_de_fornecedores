@@ -6,12 +6,10 @@ use App\Http\Controllers\API\ServiceController;
 use App\Services\GoogleMapsService;
 use App\Services\ViaCep;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 
 
 Route::prefix("/fornecedor")->group(function() {
     Route::get("/index",[FornecedorController::class,"index"]);
-    Route::get("/{id}",[FornecedorController::class,"show"]);
     Route::post("/store",[FornecedorController::class,"store"]);
     Route::put("/update/{id}",[FornecedorController::class,"update"]);
     Route::delete("/destroy/{id}",[FornecedorController::class,"destroy"]);
@@ -22,7 +20,6 @@ Route::prefix("/fornecedor")->group(function() {
 
  Route::prefix("/servico")->group(function() {
      Route::get("/index",[ServiceController::class,"index"]);
-     Route::get("/{id}",[ServiceController::class,"show"]);
      Route::post("/store",[ServiceController::class,"store"]);
      Route::put("/update/{id}",[ServiceController::class,"update"]);
      Route::delete("/destroy/{id}",[ServiceController::class,"destroy"]);

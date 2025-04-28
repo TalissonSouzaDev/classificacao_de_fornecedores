@@ -19,36 +19,66 @@ class ClassificacaofornecedorRepository {
         $servico = $this->servico->where("id",$request["servico_id"])->first();
         $fornecedors = $servico->Fornecedor->all();
         if(!$fornecedors) {
-            dd("não ha fornecedor para esse serviço");
+            return [];
         }
         $arrayfornecedor = [];
         foreach($fornecedors as $fornecedorss) {
             $array = [];
+            $classificacao = $this->classificacao_fornecedor->where('fornecedor_id', $fornecedorss->id)->latest('created_at')->first();
             $ApiGoogleMaps = $googleapi->getDistance($fornecedorss->cep_sede,$request['cep_demanda']);
             $array["fornecedor_id"] = $fornecedorss->id;
             $array["distanciavalue"] = $ApiGoogleMaps["rows"][0]["elements"][0]["distance"]["value"];
-            $array["distanciakm"]= $ApiGoogleMaps["rows"][0]["elements"][0]["distance"]["text"];
+            $array["distanciakm"] = $ApiGoogleMaps["rows"][0]["elements"][0]["distance"]["text"];
+            if ($classificacao && $classificacao->created_at) {
+                $array["justificativa"] = "Ultima demanda realizada em ". $classificacao->created_at->format('Y-m-d');
+                $array["data_demanda"] = $classificacao->created_at->format('Y-m-d');
+            }  else {
+                $array["justificativa"] = "Ainda não foi classificado.";
+                $array["data_demanda"] = "0000/00/00";
+            }
+            $array["posicao"] = $classificacao->posicao ?? 0;
             $arrayfornecedor[] = $array;
         }
 
-        $response = collect($arrayfornecedor)->sortBy("distanciavalue")->groupBy('distanciavalue')
-                                             ->map(function ($group) {
-                                                if ($group->count() > 1) {
-                                                    return $group->shuffle();
-                                                }
-                                                return $group;
-                                             })->flatten(1);
-        return $response;
+        $datasdistancia = collect($arrayfornecedor)
+                                ->sortByDesc('data_demanda')
+                                ->sortBy('distanciavalue')
+                                ->groupBy('distanciavalue')
+                                ->filter(function ($group) {
+                                    return $group->count() > 1;
+                                })->flatten(1);
+
+        $nãodatasdistancia = collect($arrayfornecedor)
+                                ->sortByDesc('data_demanda')
+                                ->sortBy('distanciavalue')
+                                ->groupBy('distanciavalue')
+                                ->filter(function ($group) {
+                                    return $group->count() == 1;
+                                })
+                                ->flatten(1);
+
+
+            $countelement = count($datasdistancia) + 1;
+            $arrayelemente = [];
+            foreach ($datasdistancia as $distancia) {
+                $distancia["posicao"] = $countelement - $distancia["posicao"];
+                $arrayelemente[] = $distancia;
+            }
+        $arrysuni = array_merge($arrayelemente, $nãodatasdistancia->toArray());
+        $collectionresponse = collect($arrysuni)->sortBy('posicao');
+
+        return $collectionresponse;
     }
 
     public function createclassificacaofornecedor($request) {
         $fornecedors = $this->ETLFornecedors($request);
         foreach($fornecedors as $key => $fornecedor) {
+            $posicao = $fornecedor["posicao"] == 0 ? $key+1 : $fornecedor["posicao"];
             $this->classificacao_fornecedor->create([
                 "fornecedor_id" => $fornecedor["fornecedor_id"],
                 "demanda_id"    => $request["id"],
-                "posicao"       => $key + 1,
-                "justificativa" => "???????",
+                "posicao"       => $posicao,
+                "justificativa" => $fornecedor["justificativa"],
                 "distancia_km"  => $fornecedor["distanciakm"],
                 "distancia_value"=> $fornecedor["distanciavalue"]
             ]);
@@ -56,11 +86,8 @@ class ClassificacaofornecedorRepository {
     }
 
     public function GetClassificacaoFornecedor($demandaId) {
-        $classificacao = $this->classificacao_fornecedor
-    ->with(["demanda", "fornecedor"])
-    ->where("demanda_id", $demandaId)
-    ->orderBy("posicao", "asc")
-    ->get();
-    return $classificacao;
+        $classificacao = $this->classificacao_fornecedor->with(["demanda", "fornecedor"])->where("demanda_id", $demandaId)
+                                                        ->orderBy("posicao", "asc")->get();
+        return $classificacao;
     }
 }

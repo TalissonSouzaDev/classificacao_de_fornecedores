@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('classificacao_fornecedors', function (Blueprint $table) {
             $table->id();
             $table->foreignId('fornecedor_id')->constrained("fornecedors")->onDelete('cascade');
-            $table->foreignId('demanda_id')->constrained("demadas")->onDelete('cascade');
+            $table->foreignId('demanda_id')->constrained("demandas")->onDelete('cascade');
             $table->integer("posicao");
             $table->string("justificativa");
             $table->string("distancia_km");

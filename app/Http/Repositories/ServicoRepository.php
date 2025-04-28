@@ -5,7 +5,7 @@ use App\Models\Servico;
 
 class ServicoRepository {
 
-    protected $servico;
+    public $servico;
 
     public function __construct(Servico $servico)
     {
@@ -25,7 +25,7 @@ class ServicoRepository {
 
     public function GetByIdServico(string | int $idservico) {
         if(!empty($idservico)) {
-            $getservico = $this->servico->where("id",$idservico)->first();
+            $getservico = $this->servico->find($idservico);
             return $getservico;
         }
     }

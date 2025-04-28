@@ -8,7 +8,7 @@ services:
     volumes:
       - ./:/var/www
     networks:
-      - teste_desafio
+      - classificacao
 
 
   webserver:
@@ -19,21 +19,21 @@ services:
     ports:
       - '8080:80'
     networks:
-      - teste_desafio
+      - classificacao
 
   postgres:
     image: postgres
     restart: always
     environment:
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: teste_desafio_backend
+      POSTGRES_DB: desafio_backend
     volumes:
       - ./docker/dbpostgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
-      - teste_desafio
+      - classificacao
          
 networks:
-    teste_desafio:
+    classificacao:
         driver: bridge

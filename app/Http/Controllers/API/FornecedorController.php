@@ -19,29 +19,14 @@ class FornecedorController extends Controller
         $this->FornecedorRepository = $FornecedorRepository;
     }
 
-    public function index(Request $request) {
+    public function index() {
         try {
-            $fornecedor = isset($request->filter)
-                            ? $this->FornecedorRepository->listAndfilter($request->filter)
-                            : $this->FornecedorRepository->listAndfilter();
+            $fornecedor = $this->FornecedorRepository->listAndfilter();
             return FornecedorResource::collection($fornecedor);
 
          } catch (\Exception $e) {
              return response()->json([
                  'error' => 'Erro ao exibir a lista',
-                 'message' => $e->getMessage()
-             ], 500);
-         }
-    }
-
-    public function show(string | int $id) {
-        try {
-            $fornecedor = $this->FornecedorRepository->GetByIdFornecedor($id);
-            return new FornecedorResource($fornecedor);
-
-         } catch (\Exception $e) {
-             return response()->json([
-                 'error' => 'Erro ao exibir a fornecedor',
                  'message' => $e->getMessage()
              ], 500);
          }

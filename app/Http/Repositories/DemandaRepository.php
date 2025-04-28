@@ -14,37 +14,30 @@ class DemandaRepository {
         $this->ClassificacaofornecedorRepository = $ClassificacaofornecedorRepository;
     }
 
-    public function listAndfilter(string $filter = "") {
-        if(empty($filter)) {
-            $response = $this->demanda->latest()->paginate(10);
+    public function listAndfilter() {
+            $response = $this->demanda->latest()->get();
             return $response;
-        }
-        $response = $this->demanda->where("name","LIKE","%{$filter}%")
-                                    ->where("cep_demanda","LIKE","%{$filter}%")
-                                    ->paginate(10);
-        return $response;
     }
 
     public function GetByIddemanda(string | int $iddemanda) {
         if(!empty($iddemanda)) {
             $getdemanda = $this->demanda->where("id",$iddemanda)->first();
-            return $getdemanda;
+            return $getdemanda ?? [];
         }
     }
 
-    public function Createdemanda(array $request) {
+    public function Createdemanda($request) {
         $service = $this->ServicoRepository->GetByIdServico($request["servico_id"]);
         if(empty($service)) {
             return false;
         }
-
         $demandacreate = $this->demanda->create([
             "name" => $request["name"],
             "cep_demanda" => $request["cep_demanda"],
             "servico_id" => $service["id"]
         ]);
         if($demandacreate) {
-            $this->ClassificacaofornecedorRepository->createclassificacaofornecedor($demandacreate);
+            $demandacreate = $this->ClassificacaofornecedorRepository->createclassificacaofornecedor($demandacreate);
         }
         return $demandacreate ? true : false;
     }
